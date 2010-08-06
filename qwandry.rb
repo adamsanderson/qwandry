@@ -23,6 +23,10 @@ module Qwandry
     def scan(name)
       []
     end
+    
+    def package(name, paths)
+      Package.new(name, paths, self)
+    end
   end
 
   # Directories look like:
@@ -31,10 +35,29 @@ module Qwandry
   #       lib-0.2
   class FlatRepository < Repository
     def scan(name)
-      Dir["#{@path}/*"].select{|path| path if File.basename(path).start_with?(name)}
+      results = []
+      Dir["#{@path}/*"].select do |path|
+        if File.basename(path).start_with?(name)
+          results << package(File.basename(path), [path])
+        end
+      end
+      results
     end
   end
-
+  
+  
+  class Package
+    attr_reader :name
+    attr_reader :repository
+    attr_reader :paths
+    
+    def initialize(name, paths, repository)
+      @name = name
+      @repository = repository
+      @paths = paths
+    end
+  end
+  
 end
 
 if __FILE__ == $0
@@ -56,20 +79,20 @@ if __FILE__ == $0
   load('repositories.rb')
 
   name = ARGV.pop
-  candidates = []
+  packages = []
 
   @repositories.each do |set, repos|
     repos.each do |repo|
-      candidates.concat(repo.scan(name))
+      packages.concat(repo.scan(name))
     end
   end
 
-  candidates.each_with_index do |path, index|
-    puts " #{index+1}. #{File.basename path}"
+  packages.each_with_index do |package, index|
+    puts " #{index+1}. #{package.name}"
   end
 
   print ">> "
   index = gets.to_i-1
-  path = candidates[index]
-  `mate #{path}`
+  package = packages[index]
+  `mate #{package.paths.join(' ')}` if package
 end
