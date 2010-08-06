@@ -5,7 +5,7 @@ def which(bin)
 end
 
 def add(label, path)
-  @repositories[label.to_s] << FlatRepository.new(path)
+  @repositories[label.to_s] << Qwandry::FlatRepository.new(path)
 end
 
 if which('ruby') == '/Users/adam/.rvm/rubies/ruby-1.9.1-p378/bin/ruby'
