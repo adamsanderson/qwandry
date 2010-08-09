@@ -16,7 +16,10 @@ require 'optparse'
 module Qwandry
 
   class Repository
-    def initialize(path)
+    attr_reader :name
+    
+    def initialize(name, path)
+      @name = name
       @path = path.chomp('/')
     end
   
@@ -41,6 +44,7 @@ module Qwandry
           results << package(File.basename(path), [path])
         end
       end
+      
       results
     end
   end
@@ -61,12 +65,17 @@ module Qwandry
 end
 
 if __FILE__ == $0
+  load('repositories.rb')
+  
   opts = OptionParser.new do |opts|    
     opts.banner = "Usage: qwandry [options] name [version]"
 
     opts.separator ""
     opts.separator "Known Repositories:"
-    # ...
+    @repositories.keys.each do |repo_label|
+      opts.separator "  #{repo_label}"
+    end
+    
   end
 
   opts.parse! ARGV
@@ -76,8 +85,6 @@ if __FILE__ == $0
     exit(-1)
   end
   
-  load('repositories.rb')
-
   name = ARGV.pop
   packages = []
 
