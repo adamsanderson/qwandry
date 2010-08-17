@@ -62,8 +62,9 @@ module Qwandry
     end
   end
   
-  def launch(package)
-    `mate #{package.paths.join(' ')}`
+  def launch(package, editor=nil)
+    editor ||= ENV['VISUAL'] || ENV['EDITOR']
+    system editor, *package.paths
   end
   module_function :launch
   
