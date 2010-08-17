@@ -62,10 +62,16 @@ module Qwandry
     end
   end
   
+  def launch(package)
+    `mate #{package.paths.join(' ')}`
+  end
+  module_function :launch
+  
 end
 
 if __FILE__ == $0
   load('repositories.rb')
+  load('~/.qwandry/repositories.rb') if File.exists?('~/.qwandry/repositories.rb')
   
   opts = OptionParser.new do |opts|    
     opts.banner = "Usage: qwandry [options] name [version]"
@@ -93,13 +99,19 @@ if __FILE__ == $0
       packages.concat(repo.scan(name))
     end
   end
+  
+  package = nil
+  if packages.length == 1
+    package = packages.first
+  else
+    packages.each_with_index do |package, index|
+      puts "%3d. %s" % [index+1, package.name]
+    end
 
-  packages.each_with_index do |package, index|
-    puts " #{index+1}. #{package.name}"
+    print ">> "
+    index = gets.to_i-1
+    package = packages[index]
   end
-
-  print ">> "
-  index = gets.to_i-1
-  package = packages[index]
-  `mate #{package.paths.join(' ')}` if package
+  
+  Qwandry.launch package if package
 end
