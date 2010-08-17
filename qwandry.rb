@@ -101,7 +101,11 @@ if __FILE__ == $0
   end
   
   package = nil
-  if packages.length == 1
+  case packages.length
+  when 0
+    puts "No packages matched '#{name}'"
+    exit 1
+  when 1
     package = packages.first
   else
     packages.each_with_index do |package, index|
