@@ -14,73 +14,23 @@ require 'optparse'
 # If no Repository matches, then qwandry will exit with a 404 (repo not found)
 #
 module Qwandry
-
-  class Repository
-    attr_reader :name
-    
-    def initialize(name, path)
-      @name = name
-      @path = path.chomp('/')
-    end
-  
-    def scan(name)
-      []
-    end
-    
-    def package(name, paths)
-      Package.new(name, paths, self)
-    end
-  end
-
-  # Directories look like:
-  #     Repository
-  #       lib-0.1
-  #       lib-0.2
-  class FlatRepository < Repository
-    def scan(name)
-      results = []
-      Dir["#{@path}/*"].select do |path|
-        if File.basename(path).start_with?(name)
-          results << package(File.basename(path), [path])
-        end
-      end
-      
-      results
-    end
-  end
-  
-  
-  class Package
-    attr_reader :name
-    attr_reader :repository
-    attr_reader :paths
-    
-    def initialize(name, paths, repository)
-      @name = name
-      @repository = repository
-      @paths = paths
-    end
-  end
-  
-  def launch(package, editor=nil)
-    editor ||= ENV['VISUAL'] || ENV['EDITOR']
-    system editor, *package.paths
-  end
-  module_function :launch
-  
+  autoload :Launcher,       "qwandry/launcher"
+  autoload :Repository,     "qwandry/repository"
+  autoload :FlatRepository, "qwandry/flat_repository"
+  autoload :Package,        "qwandry/package"
 end
 
 if __FILE__ == $0
-  load('repositories.rb')
+  @qwandry = Qwandry::Launcher.new
   load('~/.qwandry/repositories.rb') if File.exists?('~/.qwandry/repositories.rb')
   
   opts = OptionParser.new do |opts|    
     opts.banner = "Usage: qwandry [options] name [version]"
     opts.separator ""
     
-    opts.separator "Known Repositories: #{@repositories.keys.join(", ")}"
+    opts.separator "Known Repositories: #{@qwandry.repositories.keys.join(", ")}"
     opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
-      @editor = editor
+      @qwandry.editor = editor
     end
     
     opts.on_tail("-h", "--help", "Show this message") do
@@ -97,14 +47,8 @@ if __FILE__ == $0
   end
   
   name = ARGV.pop
-  packages = []
+  packages = @qwandry.find(name)
 
-  @repositories.each do |set, repos|
-    repos.each do |repo|
-      packages.concat(repo.scan(name))
-    end
-  end
-  
   package = nil
   case packages.length
   when 0
@@ -122,5 +66,5 @@ if __FILE__ == $0
     package = packages[index]
   end
   
-  Qwandry.launch(package, @editor) if package
+  @qwandry.launch(package) if package
 end
