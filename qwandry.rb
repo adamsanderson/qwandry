@@ -11,7 +11,7 @@ require 'optparse'
 # If only one Package matches, that Package will be opened
 # If more than one Package matches, then the user will be prompted to pick one
 #   While any two Packages share the same name their parent dir is appended
-# If no Repository matches, then qwandry will exit with a -404 (repo not found)
+# If no Repository matches, then qwandry will exit with a 404 (repo not found)
 #
 module Qwandry
 
@@ -76,20 +76,24 @@ if __FILE__ == $0
   
   opts = OptionParser.new do |opts|    
     opts.banner = "Usage: qwandry [options] name [version]"
-
     opts.separator ""
-    opts.separator "Known Repositories:"
-    @repositories.keys.each do |repo_label|
-      opts.separator "  #{repo_label}"
+    
+    opts.separator "Known Repositories: #{@repositories.keys.join(", ")}"
+    opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
+      @editor = editor
     end
     
+    opts.on_tail("-h", "--help", "Show this message") do
+      puts opts
+      exit
+    end
   end
 
   opts.parse! ARGV
 
   if ARGV.length != 1
     puts opts
-    exit(-1)
+    exit(1)
   end
   
   name = ARGV.pop
@@ -105,7 +109,7 @@ if __FILE__ == $0
   case packages.length
   when 0
     puts "No packages matched '#{name}'"
-    exit 1
+    exit 404 # Package not found -- hehe, super lame.
   when 1
     package = packages.first
   else
@@ -118,5 +122,5 @@ if __FILE__ == $0
     package = packages[index]
   end
   
-  Qwandry.launch package if package
+  Qwandry.launch(package, @editor) if package
 end
