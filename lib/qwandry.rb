@@ -18,4 +18,5 @@ module Qwandry
   autoload :Repository,     "qwandry/repository"
   autoload :FlatRepository, "qwandry/flat_repository"
   autoload :Package,        "qwandry/package"
+
 end
