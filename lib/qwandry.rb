@@ -14,9 +14,9 @@ require 'optparse'
 # If no Repository matches, then qwandry will exit with a 404 (repo not found)
 #
 module Qwandry
-  autoload :Launcher,       "qwandry/launcher"
-  autoload :Repository,     "qwandry/repository"
-  autoload :FlatRepository, "qwandry/flat_repository"
-  autoload :Package,        "qwandry/package"
-
+  autoload :Launcher,                   "qwandry/launcher"
+  autoload :Repository,                 "qwandry/repository"
+  autoload :FlatRepository,             "qwandry/flat_repository"
+  autoload :LibraryRepository,          "qwandry/library_repository"
+  autoload :Package,                    "qwandry/package"
 end

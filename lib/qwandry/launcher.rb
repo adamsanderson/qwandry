@@ -45,7 +45,7 @@ module Qwandry
     # tend to contain only binaries
     def add_ruby_repositories
       ($:).grep(/lib\/ruby/).reject{|path| path =~ /#{RUBY_PLATFORM}$/}.each do |path|
-        add :ruby, path
+        add :ruby, path, Qwandry::LibraryRepository
       end
     end
   

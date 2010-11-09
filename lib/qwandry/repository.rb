@@ -11,7 +11,7 @@ module Qwandry
       []
     end
   
-    def package(name, paths)
+    def package(name, paths=[])
       Package.new(name, paths, self)
     end
   end
