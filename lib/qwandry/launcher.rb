@@ -10,8 +10,6 @@ module Qwandry
   
     def initialize
       @repositories = Hash.new{|h,k| h[k] = []}
-      add_ruby_repositories
-      add_gem_repositories
     end
   
     # Adds a repository path to Qwandry's Launcher.
@@ -23,10 +21,9 @@ module Qwandry
     end
   
     # Searches all of the loaded repositories for `name`
-    def find(name,repository_label=nil)
+    def find(name)
       packages = []
       @repositories.each do |label, repos|
-        next if repository_label && repository_label != label
         repos.each do |repo|
           packages.concat(repo.scan(name))
         end
@@ -38,25 +35,6 @@ module Qwandry
     def launch(package, editor=nil)
       editor ||= @editor || ENV['VISUAL'] || ENV['EDITOR']
       system editor, *package.paths
-    end
-  
-    private
-    # Add ruby standard libraries, ignore the platform specific ones since they
-    # tend to contain only binaries
-    def add_ruby_repositories
-      ($:).grep(/lib\/ruby/).reject{|path| path =~ /#{RUBY_PLATFORM}$/}.each do |path|
-        add :ruby, path, Qwandry::LibraryRepository
-      end
-    end
-  
-    # Add gem repositories:
-    # Using the ruby load paths, determine the common gem root paths, and add those.
-    # This assumes gem paths look like:
-    def add_gem_repositories
-      ($:).grep(/gems/).map{|p| p[/.+\/gems\//]}.uniq.each do |path|
-        add :gem, path
-      end
-    
     end
   end
 end

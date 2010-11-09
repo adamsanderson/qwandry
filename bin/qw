@@ -1,26 +1,29 @@
 #!/usr/bin/env ruby
 # Add qwandry's library to the load path
-$: << File.dirname(__FILE__) + '/../lib'
+$:.unshift File.dirname(__FILE__) + '/../lib'
 # Require it
-require "qwandry"
+require "qwandry.rb"
 
-@qwandry = Qwandry::Launcher.new
-load('~/.qwandry/repositories.rb') if File.exists?('~/.qwandry/repositories.rb')
+recipe_paths = Dir[
+  (ENV['HOME']||'')+'/.qwandry/*.rb',                     # custom recipes
+  File.dirname(__FILE__)+'/../lib/qwandry/recipes/*.rb',  # built in recipes
+]
 
 opts = OptionParser.new do |opts|    
   opts.banner = "Usage: qwandry [options] name"
   opts.separator ""
   
-  opts.on("-r", "--repo LABEL", "Only search in repository LABEL","Repositories:", *@qwandry.repositories.keys.map{|k| "* #{k}"}) do |label|
-    if @qwandry.repositories.has_key? label
-      @repository_label = label
+  recipe_names = recipe_paths.map{|path| File.basename(path,'.rb')}.uniq
+  opts.on("-r", "--recipe RECIPE", "Use paths from RECIPE","Recipes:", *recipe_names.map{|k| "* #{k}"}) do |recipe|
+    if recipe_names.include?(recipe)
+      @recipe = recipe 
     else
-      STDERR.puts "Repository '#{label}' in not available, searching all repositories"
+      STDERR.puts "Recipe '#{recipe}' is not available, using default."
     end
   end
-
+  
   opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
-    @qwandry.editor = editor
+    @editor = editor
   end
   
   opts.on_tail("-h", "--help", "Show this message") do
@@ -30,14 +33,29 @@ opts = OptionParser.new do |opts|
 end
 
 opts.parse! ARGV
-
 if ARGV.length != 1
   puts opts
   exit(1)
 end
 
+# Create launcher
+@qwandry = Qwandry::Launcher.new
+
+# Configure default values
+@qwandry.editor = @editor if @editor
+
+# Load recipe
+@recipe ||= 'default'
+@recipe_path = recipe_paths.find{|p| File.basename(p,'.rb') == @recipe }
+unless @recipe_path
+  STDERR.puts "Could not find recipe '#{@recipe}'"
+  exit(1)
+end
+# Configure @qwandry
+@qwandry.instance_eval(File.read(@recipe_path) )
+
 name = ARGV.pop
-packages = @qwandry.find(name,@repository_label)
+packages = @qwandry.find(name)
 
 package = nil
 case packages.length

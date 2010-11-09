@@ -1,8 +1,0 @@
-Qwandry, a questionable tool
-=============================
-Why spend time trying to remember where libraries, projects, and packages are lurking,
-when your computer already knows?
-
-		qw activerecord # open the activerecord gem
-		qw matrix	      # open the ruby standard library matrix file
-		
