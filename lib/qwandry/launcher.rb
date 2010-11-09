@@ -1,5 +1,5 @@
 # Launcher is the core Qwandry class, it coordinates finding and launching
-# a package.  It is driven externaly by a UI.
+# a package.  It is driven externaly by a UI, for instance the `bin/qw`.
 module Qwandry 
   class Launcher
     # The default editor to be used by Qwandry#launch.
@@ -23,9 +23,10 @@ module Qwandry
     end
   
     # Searches all of the loaded repositories for `name`
-    def find(name)
+    def find(name,repository_label=nil)
       packages = []
       @repositories.each do |label, repos|
+        next if repository_label && repository_label != label
         repos.each do |repo|
           packages.concat(repo.scan(name))
         end
@@ -33,7 +34,7 @@ module Qwandry
       packages
     end
   
-    # Launches a `package`, unless set, `editor` will check against the environment.
+    # Launches a `package`. Unless `editor` will check against the environment by default.
     def launch(package, editor=nil)
       editor ||= @editor || ENV['VISUAL'] || ENV['EDITOR']
       system editor, *package.paths

@@ -8,9 +8,12 @@ require "qwandry"
 load('~/.qwandry/repositories.rb') if File.exists?('~/.qwandry/repositories.rb')
 
 opts = OptionParser.new do |opts|    
-  opts.banner = "Usage: qwandry [options] name [version]"
+  opts.banner = "Usage: qwandry [options] name"
   opts.separator ""
   
+  opts.on("-r", "--repo LABEL", "Only search in repository LABEL") do |label|
+    @repository_label = label
+  end
   opts.separator "Known Repositories: #{@qwandry.repositories.keys.join(", ")}"
   opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
     @qwandry.editor = editor
@@ -30,7 +33,7 @@ if ARGV.length != 1
 end
 
 name = ARGV.pop
-packages = @qwandry.find(name)
+packages = @qwandry.find(name,@repository_label)
 
 package = nil
 case packages.length
