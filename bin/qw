@@ -11,10 +11,14 @@ opts = OptionParser.new do |opts|
   opts.banner = "Usage: qwandry [options] name"
   opts.separator ""
   
-  opts.on("-r", "--repo LABEL", "Only search in repository LABEL") do |label|
-    @repository_label = label
+  opts.on("-r", "--repo LABEL", "Only search in repository LABEL","Repositories:", *@qwandry.repositories.keys.map{|k| "* #{k}"}) do |label|
+    if @qwandry.repositories.has_key? label
+      @repository_label = label
+    else
+      STDERR.puts "Repository '#{label}' in not available, searching all repositories"
+    end
   end
-  opts.separator "Known Repositories: #{@qwandry.repositories.keys.join(", ")}"
+
   opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
     @qwandry.editor = editor
   end
