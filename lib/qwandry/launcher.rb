@@ -11,6 +11,7 @@ module Qwandry
     def initialize
       @repositories = Hash.new{|h,k| h[k] = []}
       configure_repositories!
+      custom_configuration!
     end
   
     # Adds a repository path to Qwandry's Launcher.
@@ -61,6 +62,13 @@ module Qwandry
         add :gem, path
       end
     end
-
+    
+    def custom_configuration!
+      custom_path = ENV['HOME'] && ENV['HOME'] + '/.qwandry/init.rb'
+      if File.exist? custom_path
+        eval IO.read(custom_path)
+      end
+    end
+    
   end
 end
