@@ -16,8 +16,12 @@ module Qwandry
     # `label` is used to label packages residing in the folder `path`.
     # The `repository_type` controls the class used to index the `path`.
     def add(label, path, repository_type=Qwandry::FlatRepository)
-      label = label.to_s
-      @repositories[label] << repository_type.new(label, path)
+      if path.is_a?(Array)
+        path.each{|p| add label, p, repository_type} 
+      else
+        label = label.to_s
+        @repositories[label] << repository_type.new(label, path)
+      end
     end
   
     # Searches all of the loaded repositories for `name`

@@ -1,3 +1,3 @@
 - Differentiate multiple similar matches (show path or repository label)
 - Recognize file idioms such as './file.rb' and matching "./file/" @done
-- Custom recipes
+- Custom recipes @done
