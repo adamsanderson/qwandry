@@ -19,5 +19,4 @@ module Qwandry
   autoload :FlatRepository,             "qwandry/flat_repository"
   autoload :LibraryRepository,          "qwandry/library_repository"
   autoload :Package,                    "qwandry/package"
-  autoload :Recipe,                     "qwandry/recipe"
 end

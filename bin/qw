@@ -4,14 +4,19 @@ $:.unshift File.dirname(__FILE__) + '/../lib'
 # Require it
 require "qwandry.rb"
 
-recipes = Qwandry::Recipe.load_recipes
+# Create launcher
+@qwandry = Qwandry::Launcher.new
 
 opts = OptionParser.new do |opts|    
   opts.banner = "Usage: qwandry [options] name"
   opts.separator ""
   
-  opts.on("-r", "--recipe RECIPE", "Use paths from RECIPE","Recipes:", *recipes.map{|r| "* #{r.name}: #{r.description}"}) do |recipe|
-    @recipe_name = recipe
+  opts.on("-r", "--repo LABEL", "Only search in repository LABEL","Repositories:", *@qwandry.repositories.keys.map{|k| "* #{k}"}) do |label|
+    if @qwandry.repositories.has_key? label
+      @repository_label = label
+    else
+      STDERR.puts "Repository '#{label}' in not available, searching all repositories"
+    end
   end
   
   opts.separator ""
@@ -31,31 +36,11 @@ if ARGV.length != 1
   exit(1)
 end
 
-# Create launcher
-@qwandry = Qwandry::Launcher.new
-
 # Configure default values
 @qwandry.editor = @editor if @editor
 
-# Load recipe
-@recipe_name ||= ENV['QW_DEFAULT'] || 'default'
-@recipe = recipes.find{|r| r.name.downcase == @recipe_name }
-
-unless @recipe
-  STDERR.puts "Could not find recipe '#{@recipe_name}'"
-  exit(1)
-end
-
-# Configure Qwandry
-@recipe.new.configure(@qwandry)
-
-# Warn if there are no repositories
-if @qwandry.repositories.empty?
-  STDERR.puts "Warning: no repositories were defined in '#{@recipe_path}'"
-end
-
 name = ARGV.pop
-packages = @qwandry.find(name)
+packages = @qwandry.find(name, @repository_label)
 
 package = nil
 case packages.length

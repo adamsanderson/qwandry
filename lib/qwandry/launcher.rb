@@ -10,6 +10,7 @@ module Qwandry
   
     def initialize
       @repositories = Hash.new{|h,k| h[k] = []}
+      configure_repositories!
     end
   
     # Adds a repository path to Qwandry's Launcher.
@@ -25,9 +26,10 @@ module Qwandry
     end
   
     # Searches all of the loaded repositories for `name`
-    def find(name)
+    def find(name, required_label=nil)
       packages = []
       @repositories.each do |label, repos|
+        next if required_label && required_label != label
         repos.each do |repo|
           packages.concat(repo.scan(name))
         end
@@ -40,5 +42,25 @@ module Qwandry
       editor ||= @editor || ENV['VISUAL'] || ENV['EDITOR']
       system editor, *package.paths
     end
+    
+    private
+    def configure_repositories!
+      # Get all the paths on ruby's load path:
+      paths = $:
+    
+      # Reject binary paths, we only want ruby sources:
+      paths = paths.reject{|path| path =~ /#{RUBY_PLATFORM}$/}
+    
+      # Add ruby standard libraries:
+      paths.grep(/lib\/ruby/).each do |path|
+        add :ruby, path, Qwandry::LibraryRepository
+      end
+    
+      # Add gem repositories:
+      ($:).grep(/gems/).map{|p| p[/.+\/gems\//]}.uniq.each do |path|
+        add :gem, path
+      end
+    end
+
   end
 end
