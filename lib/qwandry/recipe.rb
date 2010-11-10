@@ -27,10 +27,18 @@ class Qwandry::Recipe
   
   def self.load_recipes
     # Load all required recipes:
-    Dir[File.dirname(__FILE__) + '/recipes/*.rb'].map do |recipe_path|
+    built_in_path = File.dirname(__FILE__) + '/recipes/*.rb'
+    custom_path   = ENV['HOME'] + '/.qwandry/*.rb' if ENV['HOME']
+
+    Dir[built_in_path, custom_path].compact.map do |recipe_path|      
       require recipe_path
       class_name = File.basename(recipe_path,'.rb').split('_').map{|w| w.capitalize}.join
-      Qwandry.const_get(class_name)
+      begin
+        Qwandry.const_get(class_name)
+      rescue Exception => e
+        STDERR.puts "Could not load recipe '#{recipe_path}'"
+        STDERR.puts e
+      end
     end
   end
 end
