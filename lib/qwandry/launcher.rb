@@ -4,16 +4,20 @@ module Qwandry
   class Launcher
     # The default editor to be used by Qwandry#launch.
     attr_accessor :editor 
+    
+    # The set of active repositories
+    attr_reader :active
   
     # Returns the repositories the Launcher will use.
     attr_reader :repositories
   
     def initialize
       @repositories = Hash.new{|h,k| h[k] = []}
+      @active = Set.new
       configure_repositories!
       custom_configuration!
     end
-  
+    
     # Adds a repository path to Qwandry's Launcher.
     # `label` is used to label packages residing in the folder `path`.
     # The `repository_type` controls the class used to index the `path`.
@@ -25,12 +29,19 @@ module Qwandry
         @repositories[label] << repository_type.new(label, path)
       end
     end
-  
+        
+    def activate(*labels)
+      labels.each{|label| @active.add label.to_s}
+    end
+    
+    def deactivate(*labels)
+      labels.each{|label| @active.delete label.to_s}
+    end
+      
     # Searches all of the loaded repositories for `name`
-    def find(name, required_label=nil)
+    def find(name)
       packages = []
-      @repositories.each do |label, repos|
-        next if required_label && required_label != label
+      @repositories.select{|label,_| @active.include? label }.each do |label, repos|
         repos.each do |repo|
           packages.concat(repo.scan(name))
         end
@@ -61,6 +72,8 @@ module Qwandry
       ($:).grep(/gems/).map{|p| p[/.+\/gems\//]}.uniq.each do |path|
         add :gem, path
       end
+      
+      activate :ruby, :gem
     end
     
     def custom_configuration!

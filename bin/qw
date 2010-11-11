@@ -11,12 +11,8 @@ opts = OptionParser.new do |opts|
   opts.banner = "Usage: qwandry [options] name"
   opts.separator ""
   
-  opts.on("-r", "--repo LABEL", "Only search in repository LABEL","Repositories:", *@qwandry.repositories.keys.map{|k| "* #{k}"}) do |label|
-    if @qwandry.repositories.has_key? label
-      @repository_label = label
-    else
-      STDERR.puts "Repository '#{label}' in not available, searching all repositories"
-    end
+  opts.on("-r", "--repo LABELS", Array, "Search in LABELS, default: #{@qwandry.active.to_a.join(',')}","Available Repositories:", *@qwandry.repositories.keys.map{|k| "  #{k}"}) do |labels|
+    @qwandry.active.replace(labels)
   end
   
   opts.separator ""
@@ -40,7 +36,7 @@ end
 @qwandry.editor = @editor if @editor
 
 name = ARGV.pop
-packages = @qwandry.find(name, @repository_label)
+packages = @qwandry.find(name)
 
 package = nil
 case packages.length
