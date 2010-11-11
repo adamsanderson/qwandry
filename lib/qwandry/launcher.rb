@@ -26,7 +26,7 @@ module Qwandry
         path.each{|p| add label, p, repository_type} 
       else
         label = label.to_s
-        @repositories[label] << repository_type.new(label, path)
+        @repositories[label] << repository_type.new(label, File.expand_path(path))
       end
     end
         
