@@ -20,6 +20,19 @@ opts = OptionParser.new do |opts|
     @editor = editor
   end
   
+  opts.separator "Additional Commands"
+  
+  opts.on("--paths", "Prints all repositories and their paths") do |editor|
+    @qwandry.repositories.each do |label, entries|
+      puts label
+      entries.each do |repo|
+        puts "\t#{repo.path} (#{repo.class.to_s.split('::').last})"
+      end
+      puts ""
+    end
+    exit(0)
+  end
+  
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit

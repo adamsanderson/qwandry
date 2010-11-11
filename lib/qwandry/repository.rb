@@ -1,6 +1,7 @@
 module Qwandry
   class Repository
     attr_reader :name
+    attr_reader :path
   
     def initialize(name, path)
       @name = name
