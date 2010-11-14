@@ -22,14 +22,19 @@ opts = OptionParser.new do |opts|
   
   opts.separator "Additional Commands"
   
-  opts.on("--paths", "Prints all repositories and their paths") do |editor|
+  opts.on("--paths", "Prints all repositories and their paths") do
     @qwandry.repositories.each do |label, entries|
-      puts label
+      puts "#{label} #{"[default]" if @qwandry.active.include? label}"
       entries.each do |repo|
         puts "\t#{repo.path} (#{repo.class.to_s.split('::').last})"
       end
       puts ""
     end
+    exit(0)
+  end
+  
+  opts.on("--customize", "Create files for customizing Qwandry") do
+    
     exit(0)
   end
   

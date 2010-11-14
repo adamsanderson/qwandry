@@ -1,0 +1,6 @@
+These files will let you customize Qwandry to your heart's desire.
+Take a look at `init.rb`, there are examples for a variety of common
+languages and package systems.
+
+Qwandry will also run just fine without these files, so feel free to delete 
+them.
