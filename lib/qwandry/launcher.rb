@@ -49,10 +49,12 @@ module Qwandry
       packages
     end
   
-    # Launches a `package`. Unless `editor` will check against the environment by default.
+    # Launches a Package or path represented by a String. Unless `editor` will
+    # check against the environment by default.
     def launch(package, editor=nil)
       editor ||= @editor || ENV['VISUAL'] || ENV['EDITOR']
-      system editor, *package.paths
+      paths = package.is_a?(String) ? [package] : package.paths
+      system editor, *paths
     end
     
     private

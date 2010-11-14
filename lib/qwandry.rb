@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'set'
+require 'fileutils'
 
 # Informal Spec:
 # 

@@ -33,8 +33,18 @@ opts = OptionParser.new do |opts|
     exit(0)
   end
   
-  opts.on("--customize", "Create files for customizing Qwandry") do
-    
+  opts.on("--customize", "Create and edit files for customizing Qwandry") do
+    dir = ENV['HOME'] && ENV['HOME'] + '/.qwandry/'
+    if !dir
+      puts "Home directory must be defined."
+      exit(1)
+    else
+      FileUtils.mkdir(dir, :verbose=>true) unless File.exist?(dir)
+      Dir[File.dirname(__FILE__) + '/../templates/*'].each do |path|
+        FileUtils.cp(path, dir, :verbose=>true, :preserve=>true)
+      end
+      @qwandry.launch dir
+    end
     exit(0)
   end
   
