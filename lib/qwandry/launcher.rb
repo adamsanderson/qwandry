@@ -46,11 +46,14 @@ module Qwandry
     end
       
     # Searches all of the loaded repositories for `name`
-    def find(name)
+    def find(*pattern)
+      pattern = pattern.join('*')
+      pattern << '*' unless pattern =~ /\*$/
+      
       packages = []
       @repositories.select{|label,_| @active.include? label }.each do |label, repos|
         repos.each do |repo|
-          packages.concat(repo.scan(name))
+          packages.concat(repo.scan(pattern))
         end
       end
       packages

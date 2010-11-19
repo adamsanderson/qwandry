@@ -5,11 +5,11 @@ module Qwandry
   #     lib2.py
   #     lib2/...
   class LibraryRepository < Qwandry::Repository
-    def scan(name)
+    def scan(pattern)
       results = Hash.new{|h,k| h[k] = package(k)}
       all_paths.select do |path|
         basename = File.basename(path)
-        if basename.start_with?(name)
+        if File.fnmatch?(pattern, basename)
           # strip any file extension
           basename.sub! /\.\w+$/,'' unless File.directory?(path)
           results[basename].paths << path

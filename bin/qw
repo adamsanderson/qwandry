@@ -55,7 +55,7 @@ opts = OptionParser.new do |opts|
 end
 
 opts.parse! ARGV
-if ARGV.length != 1
+if ARGV.length == 0
   puts opts
   exit(1)
 end
@@ -63,8 +63,9 @@ end
 # Configure default values
 @qwandry.editor = @editor if @editor
 
-name = ARGV.pop
-packages = @qwandry.find(name)
+name = ARGV.join(' ')
+packages = @qwandry.find(*ARGV)
+ARGV.clear # for the gets below
 
 package = nil
 case packages.length
@@ -79,7 +80,7 @@ else
   end
 
   print ">> "
-  index = gets.to_i-1
+  index = gets.to_i - 1
   package = packages[index]
 end
 
