@@ -5,7 +5,7 @@ module Qwandry
   class FlatRepository < Qwandry::Repository
     def scan(name)
       results = []
-      Dir["#{@path}/*"].select do |path|
+      all_paths.select do |path|
         if File.basename(path).start_with?(name)
           results << package(File.basename(path), [path])
         end

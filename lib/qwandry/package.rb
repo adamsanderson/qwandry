@@ -1,8 +1,8 @@
 module Qwandry
   class Package
     attr_reader :name
-    attr_reader :repository
     attr_reader :paths
+    attr_reader :repository
   
     def initialize(name, paths, repository)
       @name = name

@@ -1,3 +1,6 @@
 - Differentiate multiple similar matches (show path or repository label)
-- Recognize file idioms such as './file.rb' and matching "./file/" @done
-- Custom recipes @done
+- Allow better customization of repositories
+  - Filter by pattern, ie: `accept '*.rb'` or `reject '*.o'` @done  ... but code be better
+  - Customize collection phase (see LibraryRepository)
+  - Customize naming phase
+- Match multiword args, ie: activerec 3. => activerec*3.* => activerecord-3.0.3

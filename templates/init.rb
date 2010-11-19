@@ -34,8 +34,10 @@
 #   add :ghc, "/usr/local/lib/ghc/"
 
 # = Python
-# Open python standard libraries:
-#   add :python, "/usr/lib/python2.6/", Qwandry::LibraryRepository
+# Open python standard libraries, but ignore the *.pyo and *.pyc files:
+# add :python, "/usr/lib/python2.6/", 
+#   :class  => Qwandry::LibraryRepository, 
+#   :reject => '*.py[oc]'
 
 # = Ruby
 # Qwandry comes set up for ruby by default, however you may want to be able to
@@ -45,5 +47,8 @@
 #   add :cruby, "~/.rvm/src/ruby-1.9.1-p378/"
 
 # = Javascript / Node
-# Edit node.js and npm managed libraries:
-#   add :node, "/usr/local/lib/node/"
+# Edit node.js and npm managed libraries.
+# Configure a :node repository showing only the active versions of each library:
+#  add :node, "/usr/local/lib/node/", :reject=> /@/ 
+# # Configure a :npm repository showing only the versioned libraries:
+#  add :npm, "/usr/local/lib/node/",  :accept=> /@/

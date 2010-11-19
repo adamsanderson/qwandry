@@ -18,15 +18,22 @@ module Qwandry
       custom_configuration!
     end
     
-    # Adds a repository path to Qwandry's Launcher.
-    # `label` is used to label packages residing in the folder `path`.
-    # The `repository_type` controls the class used to index the `path`.
-    def add(label, path, repository_type=Qwandry::FlatRepository)
+    # Adds a repository path to Qwandry's Launcher. `label` is used to label packages residing in the folder `path`.
+    # 
+    # The `options` can be used to customize the repository.
+    # 
+    # [:class]        Repository class, defaults to Qwandry::FlatRepository
+    # [:accept]       Filters paths, only keeping ones matching the accept option
+    # [:reject]       Filters paths, rejecting any paths matching the reject option
+    # 
+    # `:accept` and `:reject` take patterns such as '*.py[oc]', procs, and regular expressions.
+    def add(label, path, options={})
       if path.is_a?(Array)
-        path.each{|p| add label, p, repository_type} 
+        path.each{|p| add label, p, options} 
       else
+        repository_class = options[:class] || Qwandry::FlatRepository
         label = label.to_s
-        @repositories[label] << repository_type.new(label, File.expand_path(path))
+        @repositories[label] << repository_class.new(label, File.expand_path(path), options)
       end
     end
         
@@ -67,7 +74,7 @@ module Qwandry
     
       # Add ruby standard libraries:
       paths.grep(/lib\/ruby/).each do |path|
-        add :ruby, path, Qwandry::LibraryRepository
+        add :ruby, path, :class=>Qwandry::LibraryRepository
       end
     
       # Add gem repositories:
