@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Sanderson"]
-  s.date = %q{2010-11-19}
+  s.date = %q{2010-12-07}
   s.default_executable = %q{qw}
   s.description = %q{      Open a gem or library's source directory with your default editor.
 }

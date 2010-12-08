@@ -4,8 +4,9 @@ Qwandry, a questionable tool
 Why spend time trying to remember where libraries, projects, and packages are 
 lurking when your computer can do it faster?
 
-		qw activerecord # opens the activerecord gem in your editor
-		qw matrix	      # opens ruby's matrix class in your editor
+		qw matrix	       # opens ruby's matrix class in your editor
+		qw rails         # will ask you which version of rails you want to open
+		qw activerec 3.1 # will find the gem activerecord 3.1 and open it
 		
 Installation
 ------------
