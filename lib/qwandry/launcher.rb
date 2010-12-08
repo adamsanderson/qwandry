@@ -63,6 +63,12 @@ module Qwandry
     # check against the environment by default.
     def launch(package, editor=nil)
       editor ||= @editor || ENV['VISUAL'] || ENV['EDITOR']
+      
+      if (!editor) || (editor =~ /^\s*$/) # if the editor is not set, or is blank, exit with a message:
+        puts "Please either set EDITOR or pass in an editor to use"
+        exit 1
+      end
+      
       paths = package.is_a?(String) ? [package] : package.paths
       system editor, *paths
     end
