@@ -95,9 +95,11 @@ module Qwandry
     end
     
     def custom_configuration!
-      custom_path = ENV['HOME'] && ENV['HOME'] + '/.qwandry/init.rb'
-      if File.exist? custom_path
-        eval IO.read(custom_path)
+      if config_dir = Qwandry.config_dir
+        custom_path = File.join(config_dir, 'init.rb')
+        if File.exist?(custom_path)
+          eval IO.read(custom_path) 
+        end
       end
     end
     

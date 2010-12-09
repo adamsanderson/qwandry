@@ -34,9 +34,9 @@ opts = OptionParser.new do |opts|
   end
   
   opts.on("--customize", "Create and edit files for customizing Qwandry") do
-    dir = ENV['HOME'] && ENV['HOME'] + '/.qwandry/'
+    dir = Qwandry.config_dir
     if !dir
-      puts "Home directory must be defined."
+      puts "HOME directory must be defined."
       exit(1)
     else
       FileUtils.mkdir(dir, :verbose=>true) unless File.exist?(dir)

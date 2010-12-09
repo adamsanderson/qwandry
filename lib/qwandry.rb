@@ -22,3 +22,19 @@ module Qwandry
   autoload :LibraryRepository,          "qwandry/library_repository"
   autoload :Package,                    "qwandry/package"
 end
+
+def Qwandry.config_dir
+  subdir = '/.qwandry/'
+  
+  case
+    # If available, use XDG_CONFIG_HOME
+    #   http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+    when ENV['XDG_CONFIG_HOME'] then File.join(ENV['XDG_CONFIG_HOME'], subdir)
+      
+    # Otherwise fallback to qwandry's default and use the standard home dir
+    when ENV['HOME']            then File.join(ENV['HOME'], subdir)
+    
+    # If HOME isn't defined, all bets are off.
+    else nil 
+  end
+end
