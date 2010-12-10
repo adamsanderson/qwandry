@@ -70,7 +70,7 @@ module Qwandry
       end
       
       paths = package.is_a?(String) ? [package] : package.paths
-      system editor, *paths
+      system "#{editor} #{paths.join ' '}"
     end
     
     private
