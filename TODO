@@ -4,4 +4,8 @@ TODO, or perhaps not...
 - Allow better customization of repositories
   - Customize collection phase (see LibraryRepository)
   - Customize naming phase
-- Match multiword args, ie: 'activerec 3.' => 'activerec*3.*' => 'activerecord-3.0.3' @done
+- If the user is using rvm, add the ruby src directory to the search path, maybe merge it with the normal ruby
+  - Examples: opening digest could get you both the ruby and the C sources.
+- For editors that don't support multi opening collections of files (ie: ./digest.rb and ./digest/) we could trick them by adding symlinks in a temp dir.
+  - Could be an option... might be a terrible idea :)
+- Instead of requiring users to find and configure other languages, small scripts for perl, python, etc. could introspect on their load paths.
