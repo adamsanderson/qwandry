@@ -70,7 +70,11 @@ module Qwandry
       end
       
       paths = package.is_a?(String) ? [package] : package.paths
-      system editor, *paths
+      # Editors may have options, 'mate -w' for instance
+      editor_and_options = editor.strip.split(/\s+/)
+      
+      # Launch the editor with its options and any paths that we have been passed
+      system(*(editor_and_options + paths))
     end
     
     private
