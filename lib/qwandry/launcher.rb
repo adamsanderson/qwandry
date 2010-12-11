@@ -102,7 +102,13 @@ module Qwandry
       if config_dir = Qwandry.config_dir
         custom_path = File.join(config_dir, 'init.rb')
         if File.exist?(custom_path)
-          eval IO.read(custom_path) 
+          begin
+            eval IO.read(custom_path), nil, custom_path, 1
+          rescue Exception=>ex
+            STDERR.puts "Warning: error in custom file: #{custom_path.inspect}"
+            STDERR.puts "Exception: #{ex.message}"
+            STDERR.puts ex.backtrace
+          end
         end
       end
     end
