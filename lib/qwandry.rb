@@ -23,18 +23,24 @@ module Qwandry
   autoload :Package,                    "qwandry/package"
 end
 
+# If defined, Qwandry will use XDG_CONFIG_HOME as the xdg spec. If not it 
+# will check for an existing `~/.qwandry`.  Finally it will fall back to
+# `~/.config/qwandry`.
+# 
+# Returns either the path the +config_dir+ or +nil+ if HOME is not defined.
+# 
+# XDG Spec:
+#   http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+# 
 def Qwandry.config_dir
   subdir = '/.qwandry/'
-  
-  case
-    # If available, use XDG_CONFIG_HOME
-    #   http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-    when ENV['XDG_CONFIG_HOME'] then File.join(ENV['XDG_CONFIG_HOME'], subdir)
-      
-    # Otherwise fallback to qwandry's default and use the standard home dir
-    when ENV['HOME']            then File.join(ENV['HOME'], subdir)
-    
-    # If HOME isn't defined, all bets are off.
-    else nil 
+  if ENV['XDG_CONFIG_HOME']
+    File.join(ENV['XDG_CONFIG_HOME'], subdir)
+  elsif File.exist? File.join(ENV['HOME'], subdir)
+    File.join(ENV['HOME'], subdir)
+  elsif ENV['HOME']
+    File.join(ENV['HOME'],'.config', subdir)
+  else
+    nil
   end
 end
