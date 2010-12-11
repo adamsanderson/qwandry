@@ -39,9 +39,9 @@ opts = OptionParser.new do |opts|
       puts "HOME directory must be defined."
       exit(1)
     else
-      FileUtils.mkdir(dir, :verbose=>true) unless File.exist?(dir)
+      FileUtils.mkdir_p(dir, :verbose=>true) unless File.exist?(dir)
       Dir[File.dirname(__FILE__) + '/../templates/*'].each do |path|
-        FileUtils.cp(path, dir, :verbose=>true, :preserve=>true)
+        FileUtils.cp(path, dir, :verbose=>true) unless File.exist?(path)
       end
       @qwandry.launch dir
     end
