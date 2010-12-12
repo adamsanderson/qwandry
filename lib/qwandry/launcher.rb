@@ -95,6 +95,12 @@ module Qwandry
         add :gem, path
       end
       
+      # Add perl repositories:
+      perl_paths = `perl -e 'foreach $k (@INC){print $k,"\n";}'` rescue ''
+      perl_paths.split("\n").reject{|path| path == '' || path == '.'}.each do |path|
+        add :perl, path, :class=>Qwandry::LibraryRepository
+      end
+      
       activate :ruby, :gem
     end
     
