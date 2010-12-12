@@ -20,9 +20,10 @@
 # 
 #   activate :projects
 #
-# If you don't use ruby, you can de-activate it:
+# If you don't use ruby, you can make something else the default:
 # 
-#   deactivate :ruby
+#   deactivate :ruby, :gem
+#   activate :python
 
 # == Common Repositories
 # Below are some common configurations you might find useful, these may vary
@@ -33,12 +34,6 @@
 #   add :ghc, "~/.cabal/lib"
 # Open Haskel system libraries:
 #   add :ghc, "/usr/local/lib/ghc/"
-
-# = Python
-# Open python standard libraries, but ignore the *.pyo and *.pyc files:
-# add :python, "/usr/lib/python2.6/", 
-#   :class  => Qwandry::LibraryRepository, 
-#   :reject => '*.py[oc]'
 
 # = Ruby
 # Qwandry comes set up for ruby by default, however you may want to be able to
