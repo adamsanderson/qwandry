@@ -1,10 +1,15 @@
 module Qwandry
-  # Directories look like:
-  #     lib1.rb
-  #     lib1/...
-  #     lib2.py
-  #     lib2/...
+  # The LibraryRepository assumes that the search path contains files in the root mixed with
+  # directories of the same name which should be opened together.  Ruby's date library is a good
+  # example of this:
+  # 
+  #     date.rb
+  #     date/
+  # 
   class LibraryRepository < Qwandry::Repository
+    
+    # Returns Packages that may contain one or more paths if there are similar
+    # root level files that should be bundled together.
     def scan(pattern)
       results = Hash.new{|h,k| h[k] = package(k)}
       all_paths.select do |path|
