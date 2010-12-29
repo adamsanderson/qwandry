@@ -102,7 +102,7 @@ module Qwandry
       end
       
       # add python repositories:
-      python_paths = `python -c 'import sys;print \"\\n\".join(sys.path)'` rescue ''
+      python_paths = `python -c 'import sys;print(\"\\n\".join(sys.path))'` rescue ''
       python_paths.split("\n").reject{|path| path == '' || path == '.' || path =~ /\.zip$/ || path =~/lib-dynload$/}.each do |path|
         add :python, path, :class=>Qwandry::LibraryRepository, :reject => /\.(py[oc])|(egg-info)$/
       end
