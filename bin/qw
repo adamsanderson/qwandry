@@ -57,7 +57,7 @@ end
 opts.parse! ARGV
 if ARGV.length == 0
   puts opts
-  exit(1)
+  exit 1 
 end
 
 # Configure default values
@@ -71,7 +71,7 @@ package = nil
 case packages.length
 when 0
   puts "No packages matched '#{name}'"
-  exit 404 # Package not found -- hehe, super lame.
+  exit 4 # Exit code 4 for No Package
 when 1
   package = packages.first
 else
@@ -85,7 +85,11 @@ else
 end
 
 if package
-  if not @qwandry.launch(package)
-    exit 1
+  if @qwandry.launch(package)
+    # Exit code 0 for success
+    exit 0 
+  else
+    # Exit with the status returned by the process used to open the package
+    exit $?.exitstatus 
   end
 end
