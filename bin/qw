@@ -84,4 +84,8 @@ else
   package = packages[index]
 end
 
-@qwandry.launch(package) if package
+if package
+  if not @qwandry.launch(package)
+    exit 1
+  end
+end
