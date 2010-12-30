@@ -30,7 +30,7 @@ module Qwandry
       end
       
       # Loads a configuration file, and executes it in the context of the Qwandry::Configuration
-      # class.  See default_configuration.rb for an example, or run:
+      # class.  See `configuration/default.rb` for an example, or run:
       # 
       #     qw --customize
       # 
