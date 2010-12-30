@@ -8,6 +8,12 @@ lurking when your computer can do it faster?
 		qw rails         # will ask you which version of rails you want to open
 		qw activerec 3.1 # will find the gem activerecord 3.1 and open it
 		
+You can also use Qwandry with other common languages:
+
+    qw -r python numpy # opens python's numpy library
+    qw -r perl URI     # open perl's URI library
+    qw -r node express # open express if it is installed for node
+		
 Installation
 ------------
 Qwandry is a standard ruby gem, on any system with ruby installed already 
