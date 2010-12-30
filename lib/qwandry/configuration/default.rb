@@ -48,7 +48,7 @@ register :node do
   node_paths = `node #{node_script_path}` rescue ''
   
   node_paths = node_paths.split("\n")
-  # Add the python paths, instruct Qwandry to skip any compiled files when trying to match a file/library:
+  # Add the node paths
   add node_paths
 end
 
