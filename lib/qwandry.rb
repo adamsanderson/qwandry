@@ -21,6 +21,7 @@ module Qwandry
   autoload :FlatRepository,             "qwandry/flat_repository"
   autoload :LibraryRepository,          "qwandry/library_repository"
   autoload :Package,                    "qwandry/package"
+  autoload :Configuration,              "qwandry/configuration"
 end
 
 # If defined, Qwandry will use XDG_CONFIG_HOME as the xdg spec. If not it 

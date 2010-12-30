@@ -1,37 +1,32 @@
 #!/usr/bin/env ruby
-# Add qwandry's library to the load path
+
+# Add Qwandry's library to the load path
 $:.unshift File.dirname(__FILE__) + '/../lib'
-# Require it
+
+# Require Qwandry's library
 require "qwandry.rb"
 
-# Create launcher
-@qwandry = Qwandry::Launcher.new
+# Load Qwandry's configuration files 
+config = Qwandry::Configuration
+config.load_configuration_files
+
+# Create a launcher
+@launcher = Qwandry::Launcher.new
 
 opts = OptionParser.new do |opts|    
   opts.banner = "Usage: qwandry [options] name"
   opts.separator ""
   
-  opts.on("-r", "--repo LABELS", Array, "Search in LABELS, default: #{@qwandry.active.to_a.join(',')}","Available Repositories:", *@qwandry.repositories.keys.map{|k| "  #{k}"}) do |labels|
-    @qwandry.active.replace(labels)
+  opts.on("-r", "--repo LABELS", Array, "Search in LABELS, default: #{config.default.join(',')}","Available Repository Types:", *config.configurations.map{|c| "  #{c}"}) do |names|
+    config.default *names
   end
   
   opts.separator ""
   opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
-    @editor = editor
+    @launcher.editor = editor
   end
   
   opts.separator "Additional Commands"
-  
-  opts.on("--paths", "Prints all repositories and their paths") do
-    @qwandry.repositories.each do |label, entries|
-      puts "#{label} #{"[default]" if @qwandry.active.include? label}"
-      entries.each do |repo|
-        puts "\t#{repo.path} (#{repo.class.to_s.split('::').last})"
-      end
-      puts ""
-    end
-    exit(0)
-  end
   
   opts.on("--customize", "Create and edit files for customizing Qwandry") do
     dir = Qwandry.config_dir
@@ -43,7 +38,7 @@ opts = OptionParser.new do |opts|
       Dir[File.dirname(__FILE__) + '/../templates/*'].each do |path|
         FileUtils.cp(path, dir, :verbose=>true) unless File.exist?(path)
       end
-      @qwandry.launch dir
+      @launcher.launch dir
     end
     exit(0)
   end
@@ -60,13 +55,13 @@ if ARGV.length == 0
   exit 1 
 end
 
-# Configure default values
-@qwandry.editor = @editor if @editor
-
+# Find the packages:
 name = ARGV.join(' ')
-packages = @qwandry.find(*ARGV)
+packages = @launcher.find(*ARGV)
 ARGV.clear # for the gets below
 
+# There may be 0, 1, or many matches.  If many, then
+# ask the user which one to launch.
 package = nil
 case packages.length
 when 0
@@ -84,8 +79,9 @@ else
   package = packages[index]
 end
 
+# If there is a package, then launch it.
 if package
-  if @qwandry.launch(package)
+  if @launcher.launch(package)
     # Exit code 0 for success
     exit 0 
   else
