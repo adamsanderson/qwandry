@@ -14,9 +14,16 @@ module Qwandry
         builders[name] << block
       end
       
+      # Registers a configuration is a specific binary is available.  If `binary` is not specified,
+      # it is assumed to be the same as the configuration name.
       def register_if_present name, binary=nil, &block
         binary ||= name
-        register(name, &block) if system("which #{binary}")
+        register(name, &block) if present? binary
+      end
+      
+      # Returns true if binary `name` is present.
+      def present? name
+        system("which #{name}", STDOUT=>"/dev/null")
       end
       
       # Sets the default configuration to launch, if no `configurations` are passed

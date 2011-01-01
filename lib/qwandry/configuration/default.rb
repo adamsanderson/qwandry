@@ -52,6 +52,16 @@ register_if_present :node do
   add node_paths
 end
 
+# If we can figure out where the user's ruby source directory is, add it.
+register_if_present :ruby_src, :rvm do
+  # If present, use the current rvm's ruby source, this will probably be MRI
+  # though you never know.  We could later try to be smarter about jruby, etc.
+  path = File.join(ENV['rvm_src_path'], ENV['rvm_ruby_string'])
+
+  # Add the sources, use a LibraryRepository to bundle .h and .c files
+  add path, :reject=>/\.(o|a|dylib)$/, :class=>Qwandry::LibraryRepository
+end
+
 # Qwandry is a ruby app after all, so activate ruby and gem by default.  Other defaults can be set
 # with a custom init.rb
 default :ruby, :gem
