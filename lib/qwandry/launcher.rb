@@ -21,16 +21,6 @@ module Qwandry
       differentiate packages
       packages
     end
-    
-    def differentiate(packages)
-      named_groups = Hash.new{|h,k| h[k] = []}
-      packages.each{|p| named_groups[p.name] << p }
-      named_groups.each do |name, packages| 
-        if packages.length > 1
-          packages.each{|p| p.name = "#{p.name} (#{p.paths.first})"} 
-        end
-      end
-    end
   
     # Launches a Package or path represented by a String. Unless `editor` will
     # check against the environment by default.
@@ -49,6 +39,20 @@ module Qwandry
       # Launch the editor with its options and any paths that we have been passed
       system(*(editor_and_options + paths))
     end
-        
+    
+    private
+    
+    # If there are multiple packages named the same, append their path to the name.
+    # This could later be handled in other ways, for instance by merging the paths.
+    def differentiate(packages)
+      named_groups = Hash.new{|h,k| h[k] = []}
+      packages.each{|p| named_groups[p.name] << p }
+      named_groups.each do |name, packages| 
+        if packages.length > 1
+          packages.each{|p| p.name = "#{p.name} (#{p.paths.first})"} 
+        end
+      end
+    end
+    
   end
 end
