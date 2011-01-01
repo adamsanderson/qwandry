@@ -52,14 +52,22 @@ register_if_present :node do
   add node_paths
 end
 
-# If we can figure out where the user's ruby source directory is, add it.
-register_if_present :ruby_src, :rvm do
-  # If present, use the current rvm's ruby source, this will probably be MRI
-  # though you never know.  We could later try to be smarter about jruby, etc.
-  path = File.join(ENV['rvm_src_path'], ENV['rvm_ruby_string'])
-
-  # Add the sources, use a LibraryRepository to bundle .h and .c files
-  add path, :reject=>/\.(o|a|dylib)$/, :class=>Qwandry::LibraryRepository
+# If this is mri ruby and we can figure out where the user's ruby source directory is, add it.
+# This might not be quite right... 
+# 
+# TODO figure out how to identify different ruby variants.
+if RUBY_ENGINE == 'ruby'
+  register_if_present :mri, :rvm do
+    # If present, use the current rvm's ruby source.
+    paths = []
+    root = File.join(ENV['rvm_src_path'], ENV['rvm_ruby_string']) 
+    paths << root                   # core objects: String, etc
+    paths << File.join(root, 'ext') # c extensions: Fiber, IO, etc.
+    paths << File.join(root, 'lib') # pure ruby libraries
+  
+    # Add the sources, use a LibraryRepository to bundle .h and .c files
+    add paths, :reject=>/\.(o|a|s|inc|def|dylib)$/, :class=>Qwandry::LibraryRepository
+  end
 end
 
 # Qwandry is a ruby app after all, so activate ruby and gem by default.  Other defaults can be set
