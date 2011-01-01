@@ -14,6 +14,11 @@ module Qwandry
         builders[name] << block
       end
       
+      def register_if_present name, binary=nil, &block
+        binary ||= name
+        register(name, &block) if system("which #{binary}")
+      end
+      
       # Sets the default configuration to launch, if no `configurations` are passed
       # in, it returns their names.
       def default(*configurations)

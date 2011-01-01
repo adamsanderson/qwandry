@@ -9,7 +9,7 @@ register :ruby do
 end
 
 # Register the default ruby gems configuration:
-register :gem do
+register_if_present :gem do
   # Get the gem paths from the ruby load paths:
   paths = ($:).grep(/gems/).map{|p| p[/.+\/gems\//]}.uniq
   
@@ -18,7 +18,7 @@ register :gem do
 end
 
 # Register a perl configuration:
-register :perl do
+register_if_present :perl do
   # Execute a perl script to find all of the perl load paths:
   perl_paths = `perl -e 'foreach $k (@INC){print $k,"\n";}'` rescue ''
   
@@ -30,7 +30,7 @@ register :perl do
 end
 
 # Add python repositories:
-register :python do
+register_if_present :python do
   # Execute a python script to find all of the python load paths:
   python_paths = `python -c 'import sys;print(\"\\n\".join(sys.path))'` rescue ''
   
@@ -42,7 +42,7 @@ register :python do
 end
 
 # Add node.js repositories:
-register :node do
+register_if_present :node do
   # Execute a node script to find all of the load paths:
   node_script_path = File.join(File.dirname(__FILE__),'probe_node.js')
   node_paths = `node #{node_script_path}` rescue ''
