@@ -11,7 +11,7 @@ module Qwandry
     def scan(pattern)
       results = []
       all_paths.select do |path|
-        if File.fnmatch?(pattern, File.basename(path))
+        if File.fnmatch?(pattern, File.basename(path), File::FNM_CASEFOLD)
           results << package(File.basename(path), [path])
         end
       end

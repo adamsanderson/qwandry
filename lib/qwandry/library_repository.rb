@@ -14,7 +14,7 @@ module Qwandry
       results = Hash.new{|h,k| h[k] = package(k)}
       all_paths.select do |path|
         basename = File.basename(path)
-        if File.fnmatch?(pattern, basename)
+        if File.fnmatch?(pattern, basename, File::FNM_CASEFOLD)
           # strip any file extension
           basename.sub! /\.\w+$/,'' unless File.directory?(path)
           results[basename].paths << path
