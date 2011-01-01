@@ -18,7 +18,18 @@ module Qwandry
         packages.concat(repo.scan(pattern))
       end
       
+      differentiate packages
       packages
+    end
+    
+    def differentiate(packages)
+      named_groups = Hash.new{|h,k| h[k] = []}
+      packages.each{|p| named_groups[p.name] << p }
+      named_groups.each do |name, packages| 
+        if packages.length > 1
+          packages.each{|p| p.name = "#{p.name} (#{p.paths.first})"} 
+        end
+      end
     end
   
     # Launches a Package or path represented by a String. Unless `editor` will
