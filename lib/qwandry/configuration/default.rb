@@ -56,7 +56,7 @@ end
 # This might not be quite right... 
 # 
 # TODO figure out how to identify different ruby variants.
-if RUBY_ENGINE == 'ruby'
+if const_defined?(:RUBY_ENGINE) && RUBY_ENGINE == 'ruby'
   register_if_present :mri, :rvm do
     # If present, use the current rvm's ruby source.
     paths = []
