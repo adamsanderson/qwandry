@@ -23,7 +23,7 @@ module Qwandry
       
       # Returns true if binary `name` is present.
       def present? name
-        system("which #{name}", STDOUT=>"/dev/null")
+        system("which #{name} > /dev/null")
       end
       
       # Sets the default configuration to launch, if no `configurations` are passed
