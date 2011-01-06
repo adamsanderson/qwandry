@@ -10,11 +10,10 @@ end
 
 # Register the default ruby gems configuration:
 register_if_present :gem do
-  # Get the gem paths from the ruby load paths:
-  paths = ($:).grep(/gems/).map{|p| p[/.+\/gems\//]}.uniq
+  require 'rubygems' unless defined? Gem
   
-  # Add all the rubygems' paths:
-  add paths
+  # Add rubygems path:
+  add File.join(Gem.dir, 'gems')
 end
 
 # Register a perl configuration:
