@@ -1,11 +1,10 @@
-
 # Register the default ruby configuration:
 register :ruby do
-  # Reject binary paths, and then find only the `/lib/ruby` sources:
-  paths = ($:).reject{|path| path =~ /#{RUBY_PLATFORM}$/}.grep(/lib\/ruby/)
+  # Reject binary paths, and ruby gems. Gems will be loaded separately:
+  paths = ($:).reject{|path| path["/#{RUBY_PLATFORM}/"] || path["/gems/"] || path == '.' }
   
   # Add ruby standard libraries using the LibraryRepository:
-  add paths, :class=>Qwandry::LibraryRepository
+  add paths, :class=>Qwandry::LibraryRepository, :reject=>/\.(o|a|s|inc|def|dylib|rbc)$/
 end
 
 # Register the default ruby gems configuration:
