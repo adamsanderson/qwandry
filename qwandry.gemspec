@@ -5,15 +5,16 @@
 
 Gem::Specification.new do |s|
   s.name = %q{qwandry}
-  s.version = "0.1.2"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Sanderson"]
-  s.date = %q{2011-01-05}
+  s.date = %q{2011-01-06}
+  s.default_executable = %q{qw}
   s.description = %q{      Open a gem or library's source directory with your default editor.
 }
   s.email = %q{netghost@gmail.com}
-  s.executables = ["qw", "qw.compiled.rbc"]
+  s.executables = ["qw"]
   s.extra_rdoc_files = [
     "README.markdown",
      "TODO"
@@ -24,23 +25,15 @@ Gem::Specification.new do |s|
      "TODO",
      "VERSION",
      "bin/qw",
-     "bin/qw.compiled.rbc",
      "lib/qwandry.rb",
-     "lib/qwandry.rbc",
      "lib/qwandry/configuration.rb",
-     "lib/qwandry/configuration.rbc",
      "lib/qwandry/configuration/default.rb",
      "lib/qwandry/configuration/probe_node.js",
      "lib/qwandry/flat_repository.rb",
-     "lib/qwandry/flat_repository.rbc",
      "lib/qwandry/launcher.rb",
-     "lib/qwandry/launcher.rbc",
      "lib/qwandry/library_repository.rb",
-     "lib/qwandry/library_repository.rbc",
      "lib/qwandry/package.rb",
-     "lib/qwandry/package.rbc",
-     "lib/qwandry/repository.rb",
-     "lib/qwandry/repository.rbc"
+     "lib/qwandry/repository.rb"
   ]
   s.homepage = %q{http://github.com/adamsanderson/qwandry}
   s.rdoc_options = ["--charset=UTF-8"]
