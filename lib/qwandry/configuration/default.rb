@@ -51,21 +51,23 @@ register_if_present :node do
   add node_paths
 end
 
-# If this is mri ruby and we can figure out where the user's ruby source directory is, add it.
-# This might not be quite right... 
-# 
-# TODO figure out how to identify different ruby variants.
-if const_defined?(:RUBY_ENGINE) && RUBY_ENGINE == 'ruby'
-  register_if_present :mri, :rvm do
+# If this is mri ruby or rubinus and we can figure out where the user's ruby source directory is, add it.
+# TODO: Add support for macruby and jruby
+if RUBY_DESCRIPTION =~ /^(ruby|rubinius) /
+  name = case $1
+    when 'ruby'     then :mri
+    when 'rubinius' then :rbx
+  end
+  register_if_present name, :rvm do
     # If present, use the current rvm's ruby source.
     paths = []
     root = File.join(ENV['rvm_src_path'], ENV['rvm_ruby_string']) 
     paths << root                   # core objects: String, etc
-    paths << File.join(root, 'ext') # c extensions: Fiber, IO, etc.
+    paths << File.join(root, 'ext') # extensions: Fiber, IO, etc.
     paths << File.join(root, 'lib') # pure ruby libraries
   
     # Add the sources, use a LibraryRepository to bundle .h and .c files
-    add paths, :reject=>/\.(o|a|s|inc|def|dylib)$/, :class=>Qwandry::LibraryRepository
+    add paths, :reject=>/\.(o|a|s|inc|def|dylib|rbc)$/, :class=>Qwandry::LibraryRepository
   end
 end
 
