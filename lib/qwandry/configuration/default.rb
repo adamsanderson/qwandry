@@ -11,15 +11,8 @@ end
 register_if_present :gem do
   require 'rubygems' unless defined? Gem
   
-  paths = []
-  if ENV['GEM_PATH']  # RVM makes use of GEM_PATH
-    paths = ENV['GEM_PATH'].split(':').map { |p| File.join(p, 'gems') }
-  end
-  paths << File.join(Gem.dir, 'gems')
-  paths = paths.uniq  # Possible duplicates from GEM_PATH and Gem.dir
-
   # Add rubygems path:
-  add paths
+  add Gem.path.map { |p| File.join(p, 'gems') }
 end
 
 # Register a perl configuration:
