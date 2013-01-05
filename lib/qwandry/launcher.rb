@@ -36,8 +36,10 @@ module Qwandry
       # Editors may have options, 'mate -w' for instance
       editor_and_options = editor.strip.split(/\s+/)
       
-      # Launch the editor with its options and any paths that we have been passed
-      system(*(editor_and_options + paths))
+      Dir.chdir(File.dirname paths.first) do
+        # Launch the editor with its options and any paths that we have been passed
+        system(*(editor_and_options + paths))
+      end
     end
     
     private
