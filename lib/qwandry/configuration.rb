@@ -23,7 +23,10 @@ module Qwandry
       
       # Returns true if binary `name` is present.
       def present? name
-        system("which #{name} > /dev/null")
+        return File.exist?(name.to_s) ||
+                  ENV['PATH'].split(File::PATH_SEPARATOR).find {|pathDir|
+                    File.exist?(File.join pathDir, name.to_s)
+                  }
       end
       
       # Sets the default configuration to launch, if no `configurations` are passed
