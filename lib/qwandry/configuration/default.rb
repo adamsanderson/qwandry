@@ -12,7 +12,7 @@ register_if_present :gem do
   require 'rubygems' unless defined? Gem
   
   # Add rubygems path:
-  add File.join(Gem.dir, 'gems')
+  add Gem.path.map { |p| File.join(p, 'gems') }
 end
 
 # Register a perl configuration:
