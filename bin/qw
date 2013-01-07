@@ -43,6 +43,16 @@ opts = OptionParser.new do |opts|
     exit(0)
   end
   
+  opts.on("--version", "Print version") do
+    spec = Gem.loaded_specs['qwandry']
+    if spec 
+      puts spec.full_name
+    else
+      puts 'qwandry-dev'
+    end
+    exit
+  end
+  
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit

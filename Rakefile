@@ -1,27 +1,18 @@
 require 'rake'
 require 'rake/testtask'
 require 'rdoc/task'
+require 'rubygems/package_task'
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |s|
-    s.name = "qwandry"
-    s.summary = "Qwandry lets you quickly edit ruby gems and libraries"
-    s.description = <<-DESC
-      Open a gem or library's source directory with your default editor.
-    DESC
-    s.email = "netghost@gmail.com"
-    s.homepage = "http://github.com/adamsanderson/qwandry"
-    s.authors = ["Adam Sanderson"]
-    s.has_rdoc = false
-    s.files = FileList["[A-Z]*", "{bin,lib,test}/**/*"]
-    
-    # Testing
-    s.test_files = FileList["test/**/*_test.rb"]
-  end
+spec = eval(File.read('qwandry.gemspec'))
 
-rescue LoadError
-  puts "Jeweler not available. Install it for jeweler-related tasks with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+Gem::PackageTask.new(spec) do |p|
+  p.gem_spec = spec
+end
+
+desc "Install the current Qwandry gem"
+task "install" => [:gem] do
+  path = File.join("pkg", spec.full_name)
+  system 'gem', 'install', path
 end
 
 Rake::TestTask.new do |t|
