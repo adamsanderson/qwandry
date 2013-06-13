@@ -41,11 +41,24 @@ end
 
 # Add node.js repositories:
 register_if_present :node do
-  # Execute a node script to find all of the load paths:
-  node_script_path = File.join(File.dirname(__FILE__),'probe_node.js')
-  node_paths = `node #{node_script_path}` rescue ''
   
-  node_paths = node_paths.split("\n")
+  node_paths = []
+
+  # check all parent folders for node_modules
+  i = 0
+  while true
+    parent_path = File.expand_path './' + '../' * i
+    test_path = parent_path + '/node_modules'
+    if File.directory? test_path
+      node_paths.push test_path
+    end
+    break if parent_path == '/' # expand_path keeps returning '/', rather than an error, if you have too many ../'s
+    i += 1
+  end
+
+  # require.paths is removed, so we use NODE_PATH instead to get the global paths
+  node_paths.concat ENV['NODE_PATH'].split(':')
+
   # Add the node paths
   add node_paths
 end
