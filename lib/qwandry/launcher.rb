@@ -28,8 +28,13 @@ module Qwandry
       editor ||= @editor || ENV['QWANDRY_EDITOR'] || ENV['VISUAL'] || ENV['EDITOR']
       
       if (!editor) || (editor =~ /^\s*$/) # if the editor is not set, or is blank, exit with a message:
-        puts "Please set QWANDRY_EDITOR, VISUAL or EDITOR, or pass in an editor to use"
-        exit 1
+        puts "Please set QWANDRY_EDITOR, VISUAL or EDITOR, or pass in an editor to use (-e editor)"
+        if STDOUT.tty?
+          print "Or, select an editor now: "
+          editor = gets 
+        else
+          exit 1
+        end
       end
       
       paths = package.is_a?(String) ? [package] : package.paths
