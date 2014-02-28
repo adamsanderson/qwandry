@@ -7,6 +7,11 @@ module Qwandry
     
     # Searches all of the loaded repositories for `name`
     def find(*pattern)
+      if pattern[0].include? '/'
+        # Perform a deep scan if the first token of the pattern contains a slash
+        pattern[0], deep_scan_pattern = pattern[0].split('/', 2)
+      end
+      
       # Create a glob pattern from the user's input, for instance
       # ["rails","2.3"] => "rails*2.3*"
       pattern = pattern.join('*')
@@ -19,6 +24,17 @@ module Qwandry
       end
       
       differentiate packages
+
+      if deep_scan_pattern
+        # Deep scan all matched packages
+        packages = packages.inject([]) do |matched_paths, package|
+          matched_paths += package.deep_scan(deep_scan_pattern)
+        end
+
+        # Sort by length of the matched paths, with the shortest one last
+        packages.sort_by! { |package| -package.paths.first.size }
+      end
+
       packages
     end
   
