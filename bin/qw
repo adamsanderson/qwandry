@@ -10,8 +10,10 @@ require "qwandry.rb"
 config = Qwandry::Configuration
 config.load_configuration_files
 
-# Create a launcher
-@launcher = Qwandry::Launcher.new
+# By default, Qwandry opens the given package
+# in an editor
+require 'qwandry/actions/launch_package'
+@action = Qwandry::Actions::LaunchPackage.new
 
 opts = OptionParser.new do |opts|    
   opts.banner = "Usage: qwandry [options] name"
@@ -23,7 +25,12 @@ opts = OptionParser.new do |opts|
   
   opts.separator ""
   opts.on("-e", "--editor EDITOR", "Use EDITOR to open the package") do |editor|
-    @launcher.editor = editor
+    @action.editor = editor
+  end
+  
+  opts.on("-s", "--show", "Show package path") do
+    require 'qwandry/actions/show_package_path'
+    @action = Qwandry::Actions::PrintPackagePath.new
   end
   
   opts.on("-s", "--show", "Show package path") do |editor|
@@ -71,7 +78,8 @@ end
 
 # Find the packages:
 name = ARGV.join(' ')
-packages = @launcher.find(*ARGV)
+finder = Qwandry::Launcher.new
+packages = finder.find(*ARGV)
 ARGV.clear # for the gets below
 
 # There may be 0, 1, or many matches.  If many, then
@@ -93,13 +101,9 @@ else
   package = packages[index]
 end
 
-# If there is a package, then launch it.
 if package
-  if @launcher.launch(package)
-    # Exit code 0 for success
-    exit 0 
-  else
-    # Exit with the status returned by the process used to open the package
-    exit $?.exitstatus 
-  end
+  @action.package = package
+  @action.run
+  
+  exit @action.exit_status
 end
