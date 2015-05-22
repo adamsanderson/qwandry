@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name               = "qwandry"
-  s.version            = "0.1.5"
+  s.version            = "0.1.6"
   s.summary            = "Qwandry lets you quickly edit ruby gems and libraries"
   s.description        = "Open a gem or library's source directory with your default editor."
   s.email              = "netghost@gmail.com"

@@ -26,6 +26,10 @@ opts = OptionParser.new do |opts|
     @launcher.editor = editor
   end
   
+  opts.on("-s", "--show", "Show package path") do |editor|
+    @launcher.editor = "echo"
+  end
+  
   opts.separator "Additional Commands"
   
   opts.on("--customize", "Create and edit files for customizing Qwandry") do
