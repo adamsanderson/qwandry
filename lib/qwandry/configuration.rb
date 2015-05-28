@@ -24,7 +24,9 @@ module Qwandry
       # Returns true if executable `name` is present.
       def present? name
         ENV['PATH'].split(File::PATH_SEPARATOR).any? do |pathDir|
-          File.executable?(File.join pathDir, name.to_s)
+          # Because of windows system, it can't executable program without suffix e.g. '.bat', '.exe'.So it will cause a bug.
+          # In any case, this fix just is temporary. Can it to be rubyist? THK so mach.
+          File.executable?(File.join pathDir, name.to_s) or File.executable?(File.join pathDir, name.to_s + '.bat') or File.executable?(File.join pathDir, name.to_s + '.exe')
         end
       end
       
